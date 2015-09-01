@@ -7,23 +7,35 @@ import (
 )
 
 const (
-	PORT = ":8081"
-	CERT = "cert.pem"
-	KEY  = "key.pem"
+	port = ":8081"
+	cert = "cert.pem"
+	key  = "key.pem"
 )
 
-func addUser(w http.ResponseWriter, r *http.Request) {
-
+// user
+func user(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		fmt.Print("Get User")
+	case "POST":
+		fmt.Print("POST User")
+	case "PUT":
+		fmt.Print("PUT User")
+	}
+	if err := r.ParseForm(); err != nil {
+		fmt.Printf("Error parsing add user form:%s", err.Error())
+	}
 }
 
+// root call `/`
 func root(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "We're secured!")
 }
 
 func main() {
 	http.HandleFunc("/", root)
-	http.HandleFunc("/add/user", addUser)
-	if err := http.ListenAndServeTLS(PORT, CERT, KEY, nil); err != nil {
+	http.HandleFunc("/user", user)
+	if err := http.ListenAndServeTLS(port, cert, key, nil); err != nil {
 		log.Fatal(err)
 	}
 
